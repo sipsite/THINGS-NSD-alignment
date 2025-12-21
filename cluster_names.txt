@@ -1,0 +1,138 @@
+## this .txt contains all category names of NSD and THINGS (both new version and old version)
+
+## ------------------------------------- new-ver ------------------------------------- ##
+
+## new-ver THING-to-NSD alignment
+## (see utils.py -> dict0 (new-ver))
+
+## NSD new-ver
+0       "zebra"
+1       "bear"
+2       "dog"
+3       "computer"
+4       "giraffe"
+5       "bike"
+6       "sweets"
+7       "umbrella"
+8       "horse"
+9       "toy"
+10      "sports"
+11      "baseball"
+12      "bedroom"
+13      "cow"
+14      "group of people"
+15      "pizza"
+16      "sky"
+17      "elephant"
+18      "fruits"
+19      "living room"
+20      "vehicle"
+21      "surfer"
+22      "hydrant"
+23      "stop sign"
+24      "train"
+25      "tennis"
+26      "cat"
+27      "bus"
+28      "bathroom"
+29      "soccer"
+30      "boat"
+31      "person eating"
+32      "food"
+33      "airplane"
+34      "skate"
+35      "sheep"
+36      "clocktower"
+37      "flower"
+38      "ski"
+39      "bird"
+40      "a person"
+
+## THINGS new-ver
+0*  unclassified
+1   虫子
+2   水生动物
+3*   哺乳动物
+4   鸟类
+5   车的一部分
+6   乐器
+7   饮料/罐子
+8   水果
+9   糖类
+10  表/测量仪器
+11  身体部位
+12  干果
+13  棋牌
+14  甜品（面点、冰激凌）
+15  淀粉、华夫饼
+16  粉/酱
+17  汉堡 薯条 烤肉
+18  饼类的（扁平的）面食
+19  蔬菜
+20  室内小型用具/摆件
+21  带棍棒的球类运动相关（棒垒球、高尔夫、网球...）
+22  和火相关（蜡烛...）
+23*  树类植物
+24  各种电子设备
+25  武器、铠甲类装备
+26  在人下面的东西：船、冰鞋 雪板、摩托车
+27  杯盘
+28  家用室内机器
+29*  衣服、装扮
+30  头上的器官
+31  四肢有关的器官
+32  车、bus、train
+33  toys、马
+34  游乐设施
+35  船
+36  飞的（飞机、导弹）
+37  个人清洁用品
+38  带子、包
+39  毛、丝制的衣物
+40  户外设施（管状、台子、开关）
+41  出水装置
+42  锁、门的关节
+43  较大件的家具（床、沙发）
+44  片状纸类（明信片..）
+45  小工具，条状的（梳子..）
+46  用具，膜状居多（胶带...）
+47  工具，非家用（农用）
+48  钢铁制的小用具
+
+## ps. "*" denote this cluster has more images than others
+
+# ------------------------------------- old-ver ------------------------------------- ##
+
+
+## old-ver THING-to-NSD alignment
+## (see utils.py -> dict0 (old-ver))
+
+## THINGS old-ver
+0       animal
+1       bird
+2       body part
+3       clothing
+4       clothing accessory
+5       container
+6       dessert
+7       drink
+8       electronic device
+9       food
+10      fruit
+11      furniture
+12      home decor
+13      insect
+14      kitchen appliance
+15      kitchen tool
+16      medical equipment
+17      musical instrument
+18      office supply
+19      part of car
+20      plant
+21      sports equipment
+22      tool
+23      toy
+24      vegetable
+25      vehicle
+26      weapon
+

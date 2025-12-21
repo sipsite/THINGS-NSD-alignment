@@ -1,0 +1,14 @@
+opencv-python
+matplotlib
+numpy
+faiss-cpu
+Pillow
+requests
+transformers
+torch
+scikit-learn
+h5py
+pandas
+scipy
+umap-learn
+hdbscan
