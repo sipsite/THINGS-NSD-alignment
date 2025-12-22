@@ -77,9 +77,27 @@ def rearrange_json(input_path, output_path):
         elif score >= t[2]:
             new_output["group2"].append(item)
             new_output["metadata"]["size_of_each_group"][2] += 1
-        else:
-            new_output["discarded"].append(item)
-            new_output["metadata"]["size_of_each_group"][3] += 1
+    print("seen nsd : ", len(seen_nsd))
+    print("seen things : ", len(seen_things))
+    allow_duplicate = 1
+    if allow_duplicate:
+        for item in all_items:
+            score = item["score_final"]
+            if item["things_id"] in seen_things:
+                continue
+            if score >= t[2]: 
+                seen_things.add(item["things_id"])
+                seen_nsd.add(item["nsd_id"])
+            if score >= t[0]:
+                new_output["group0"].append(item)
+                new_output["metadata"]["size_of_each_group"][0] += 1
+            elif score >= t[1]:
+                new_output["group1"].append(item)
+                new_output["metadata"]["size_of_each_group"][1] += 1
+            elif score >= t[2]:
+                new_output["group2"].append(item)
+                new_output["metadata"]["size_of_each_group"][2] += 1
+    print("After allowing duplicate:")
     print("seen nsd : ", len(seen_nsd))
     print("seen things : ", len(seen_things))
     # 5. 保存结果

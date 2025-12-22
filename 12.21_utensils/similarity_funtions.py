@@ -7,8 +7,11 @@ from tqdm import tqdm
 import multiprocessing
 import psutil
 
+from select_subj import load_subj_img_index
+
 import datetime
 import time
+import gc
 
 def get_current_time_info():
     now = datetime.datetime.now()
@@ -230,9 +233,8 @@ import json
 if __name__ == "__main__":
     # 1. 实例化系统
     system = RetrievalSystem()
-    
     # 2. 路径配置 (请修改为你的实际路径)
-    base_path = "/home/ysunem/12.21/THINGS&NSD_code_ver2/" # 你的数据目录
+    base_path = "/home/ysunem/12.21/THINGS-NSD_code/" # 你的数据目录
     things_npy = os.path.join(base_path, "things_img.npy") # 必须是 uint8
     nsd_npy = os.path.join(base_path, "nsd_img.npy")       # 必须是 uint8
     
@@ -277,6 +279,12 @@ if __name__ == "__main__":
         'swav': co[5]
     }
 
+    keep_index = load_subj_img_index(subj_id1=1) ## $$$
+    for k, v in feat_nsd.items():
+        feat_nsd[k] = v[keep_index]
+    global_nsd_img = global_nsd_img[keep_index] 
+    
+    gc.collect()
     # 6. 运行 Pipeline
     results = system.run_pipeline(feat_things, feat_nsd, weights, top_k=50, top_r=5, batch_size=4096)
 
