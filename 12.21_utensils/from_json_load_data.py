@@ -13,13 +13,14 @@ def get_current_time_info():
     standard_format = now.strftime("%m-%d_%H-%M-%S")
     return standard_format
 
+## __adjustable__
 save_path = "/home/ysunem/12.21/THINGS-NSD_code/12.21_utensils/sig_match_save/"
 good_index = None
 nsd_data_path = "/home/ysunem/12.21/nsd-data/"
 things_data_path = "/home/ysunem/12.21/things-eeg-data/Preprocessed_data_250Hz_whiten/"
 
 def from_json_load_eeg_data(match_index, wanted_grp = [0, 1, 2], data_path=things_data_path, things_subj_id=1):
-    things_subj_sig_path = os.path.join(data_path, f"subj-{things_subj_id:02d}", "train.pt")
+    things_subj_sig_path = os.path.join(data_path, f"sub-{things_subj_id:02d}", "train.pt")
     things_data_all = torch.load(things_subj_sig_path, map_location='cpu', weights_only=False)["eeg"]
     things_data = []    
     all_items = []
@@ -43,7 +44,7 @@ def from_json_load_nsd_data(match_index, wanted_grp = [0, 1, 2], data_path=nsd_d
             nsd_id = item["nsd_id"]
             c4 = []
             for _ in range(3):  # each nsd_id has 3 repetitions
-                print(good_index[nsd_id][_])
+                c4.append(nsd_data_all[good_index[nsd_id][_], :])
             nsd_data.append(c4)
     return nsd_data
 
@@ -64,7 +65,8 @@ def process_nsd_index():
 
 if __name__ == "__main__":
     os.makedirs(save_path, exist_ok=True)
-    json_path = "/home/ysunem/12.21/THINGS-NSD_code/12.21_utensils/retri_ver3.json"
+    ## __adjustable__
+    json_path = "/home/ysunem/12.21/THINGS-NSD_code/12.21_utensils/retrieval_12-22_19-08.json"
     try : 
         with open(json_path, 'r') as f:
             json_data = json.load(f)
@@ -73,14 +75,15 @@ if __name__ == "__main__":
         exit(1)
 
     ## good_index for nsd subj01
-    ## set it to 0 after the first time
-    first_time = 0
+    ## __adjustable__ : set it to 0 after the first time
+    first_time = 1
     if first_time:
         good_index = process_nsd_index()
     else : 
-        good_index_path = os.path.join(save_path, f"nsd_good_index_12-22_16-11-40.pt")
+        good_index_path = os.path.join(save_path, f"nsd_good_index_12-22_16-11-40.pt") ## __adjustable__
         good_index = torch.load(good_index_path, map_location='cpu', weights_only=False)["subj01"]
-    
+        
+
     save_path = os.path.join(save_path, f"{get_current_time_info()}/")
     os.makedirs(save_path, exist_ok=True)
     
@@ -92,6 +95,6 @@ if __name__ == "__main__":
     for things_subj_id in range(1, 11):
         things_data = from_json_load_eeg_data(match_index=json_data, wanted_grp=wanted_grp, things_subj_id=things_subj_id)
         if things_subj_id == 1:
-            print("things_data.shape : ", things_data.shape)
+            print("things_data.shape : ", np.array(things_data).shape)
         file_name2 = f"things_subj{things_subj_id:02d}_data.pt"
         torch.save(things_data, os.path.join(save_path, file_name2))

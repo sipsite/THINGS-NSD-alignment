@@ -28,8 +28,10 @@ sys.path.append(parent_dir)
 from utils import plot
 
 # ================= 配置 =================
-base_path = "/home/ysunem/12.21/THINGS&NSD_code_ver2/"  # 你的数据根目录
-json_path = "retri_ver3.json"             # 你的结果文件
+
+## __adjustable__
+base_path = "/home/ysunem/12.21/THINGS-NSD_code/"  # 你的数据根目录
+json_path = "retrieval_rearranged_12-22_20-39__55_50_47.json"             # 你的结果文件
 output_root = f"samples_{get_current_time_info()}/"                     # 导出图片的根目录
 SAMPLES_PER_GROUP = 40                            # 每组抽多少对
 

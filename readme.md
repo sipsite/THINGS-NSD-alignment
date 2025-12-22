@@ -1,3 +1,16 @@
+
+A simple guide (updated on 12.22): 
+
+1. run `data_processing.py` : get CLIP embedding
+2. run `12.21_utensils/feature_extraction.py` : get other embeddings
+3. run `12.21_utensils/similarity_functions.py` : do searching and get top5 results (20~40 min approx)
+4. run `12.21_utensils/rearange_json.py` : filter json file based on selected threshold
+5. run `12.21_utensils/show_examples.py` : show examples of each group
+6. run `12.21_utensils/from_json_load_data.py` : load fMRI and EEG signals based on json file
+
+-----
+readme (old version)
+
 # THINGS-NSD Images Alignment
 
 this project does the following : 

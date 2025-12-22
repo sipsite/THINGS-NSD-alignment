@@ -40,7 +40,8 @@ def rearrange_json(input_path, output_path):
     total_count = len(all_items)
     print(f"📊 Total items loaded: {total_count}")
 
-    t = [0.55, 0.45, 0.38]
+    ## __adjustable__ : thresholds
+    t = [0.55, 0.5, 0.47]
 
     # 3. 初始化新的容器
     new_output = {
@@ -53,7 +54,7 @@ def rearrange_json(input_path, output_path):
         "group0": [],  
         "group1": [], 
         "group2": [],
-        "discarded": []        
+        "discarded": []
     }
 
     # 4. 【重筛】一个个摘出来
@@ -108,8 +109,8 @@ def rearrange_json(input_path, output_path):
     print("count : ", new_output["metadata"]["size_of_each_group"])
 
 if __name__ == "__main__":
-    # 输入文件
-    input_file = "retrieval_a2_t52.json"
+    # __adjustable__ : 输入文件
+    input_file = "retrieval_filtered12-22_20-06-00.json"
     
     # 输出文件 
     output_file = f"retrieval_rearranged_{get_current_time_info()}.json"

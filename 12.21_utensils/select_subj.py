@@ -7,6 +7,7 @@ import random
 
 nsd_path = "/home/ysunem/12.21/nsd-data/"
 
+# get index of images that are shown to subject uniquely
 def load_subj_img_index(subj_id1):
     subj_id_path = nsd_path + "COCO_73k_subj_indices.hdf5"
     with h5py.File(subj_id_path, "r") as f:
@@ -20,10 +21,13 @@ def load_subj_img_index(subj_id1):
         for _ in subj_2_data:
             seen_img2.add(_)
         seen_img1 = seen_img1 - seen_img2
-        return list(seen_img1)
+        return sorted(list(seen_img1))
 
 
 
-
+if __name__ == "__main__":
+    print(load_subj_img_index(subj_id1=1)[:20])
+    print(load_subj_img_index(subj_id1=1)[:20])
+    print(load_subj_img_index(subj_id1=1)[:20])
 
         

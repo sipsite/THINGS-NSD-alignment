@@ -26,7 +26,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 # 全局变量：用于多进程共享内存 (Linux Fork 模式下零拷贝)
 global_things_img = None
 global_nsd_img = None
-co1 = np.array([10, 0.1, 0.1]) ## __adjustable__
+co1 = np.array([10, 0, 0]) ## __adjustable__
 co1 /= co1.sum()
 
 # ================= 多进程 Worker 函数 =================
@@ -234,6 +234,7 @@ if __name__ == "__main__":
     # 1. 实例化系统
     system = RetrievalSystem()
     # 2. 路径配置 (请修改为你的实际路径)
+    ## __adjustable__
     base_path = "/home/ysunem/12.21/THINGS-NSD_code/" # 你的数据目录
     things_npy = os.path.join(base_path, "things_img.npy") # 必须是 uint8
     nsd_npy = os.path.join(base_path, "nsd_img.npy")       # 必须是 uint8
@@ -268,7 +269,8 @@ if __name__ == "__main__":
     
 
     # 5. 定义粗筛权重 (Coarse Weights)
-    co = np.array([7, 3, 3, 0.1, 3, 0.1]) ## __adjustable__
+    ## __adjustable__
+    co = np.array([7, 3, 3, 0, 3, 0]) 
     co /= np.sum(co)
     weights = {
         'clip': co[0], 
@@ -279,7 +281,7 @@ if __name__ == "__main__":
         'swav': co[5]
     }
 
-    keep_index = load_subj_img_index(subj_id1=1) ## $$$
+    keep_index = load_subj_img_index(subj_id1=1) 
     for k, v in feat_nsd.items():
         feat_nsd[k] = v[keep_index]
     global_nsd_img = global_nsd_img[keep_index] 
@@ -287,8 +289,9 @@ if __name__ == "__main__":
     gc.collect()
     # 6. 运行 Pipeline
     results = system.run_pipeline(feat_things, feat_nsd, weights, top_k=50, top_r=5, batch_size=4096)
-
-
+    for row in results:
+        row[1] = int(keep_index[row[1]]) # map back to original nsd index
+    
     # --- 配置阈值 (根据你的实际分数分布调整) ---
     # 提示：Final Score 是归一化的，理论最大值是 1.0
     THRESHOLD_1 = None  # 高置信度 (High Confidence)
@@ -310,10 +313,10 @@ if __name__ == "__main__":
     scores_pixcorr = data_arr[:, 5]
     THRESHOLD_1, THRESHOLD_2 = np.percentile(scores_final, [90, 70]) ## __adjustable__
     
-    try :
-        scores_struct = (scores_ssim * co1[1] + scores_pixcorr * co1[2]) / (co1[1] + co1[2])
-    except:
-        scores_struct = (scores_ssim * 0.3 + scores_pixcorr * 0.1) / 0.4
+    # try :
+    #     scores_struct = (scores_ssim * co1[1] + scores_pixcorr * co1[2]) / (co1[1] + co1[2])
+    # except:
+    scores_struct = (scores_ssim * 0.3 + scores_pixcorr * 0.1) / 0.4
     # 3. 创建画布
     fig, axes = plt.subplots(1, 3, figsize=(18, 5))
     
@@ -326,7 +329,7 @@ if __name__ == "__main__":
 
     # --- Plot 2: Structural Score (SSIM & PixCorr) ---
     axes[1].hist(scores_struct, bins=100, color='lightgreen', edgecolor='black', alpha=0.7)
-    axes[1].set_title('Structural Score\n(0.3*SSIM + 0.1*Pix) / 0.4', fontsize=14)
+    axes[1].set_title('Structural Score\n / 0.4', fontsize=14)
     axes[1].set_xlabel('Score')
     axes[1].grid(axis='y', alpha=0.5)
 
@@ -345,7 +348,7 @@ if __name__ == "__main__":
     plt.tight_layout()
     
     # 保存图片
-    plt.savefig("score_distribution.png", dpi=300)
+    plt.savefig(f"score_distribution{get_current_time_info()}.png", dpi=300)
     print("✅ Histogram saved to score_distribution.png. Check this file to set thresholds!")
     
     # 7. 结果过滤与保存 (JSON 格式)
