@@ -7,7 +7,11 @@ only everything under folder 12.24 is needed.
 3. put all nsd data directly under "nsd-data" folder
 4. put fMRI embeddings folder, "fMRI_embeddings", under root directory(i.e. 12.24)
 
+<br><br><br><br><br><br><br><br><br><br><br>
+
 plz ignore the below.
+
+
 ----
 
 A simple guide (updated on 12.22): 
