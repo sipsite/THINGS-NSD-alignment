@@ -1,4 +1,15 @@
 
+only everything under folder 12.24 is needed.
+
+## before running : 
+1. put eeg signal folder, "Preprocessed_data_250Hz_whiten", under "things-eeg-data" folder
+2. put things images folder "training_images" and "image_metadata.npy" under "things-eeg-data" folder
+3. put all nsd data directly under "nsd-data" folder
+4. put fMRI embeddings folder, "fMRI_embeddings", under root directory(i.e. 12.24)
+
+plz ignore the below.
+----
+
 A simple guide (updated on 12.22): 
 
 1. run `data_processing.py` : get CLIP embedding
