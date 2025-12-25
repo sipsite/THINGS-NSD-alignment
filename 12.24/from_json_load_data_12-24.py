@@ -85,7 +85,7 @@ def from_json_load_nsd_data(match_index, subj_index):
 ## nsd_subj (a number), things_subj (a list), threshold, save_path (relative path)
 def load(nsd_subj=1, things_subj=np.arange(1,11).tolist(), threshold=0.45):
     save_path = f"match_save_{get_current_time_info(3)}/subj{nsd_subj:02d}/"
-    print(f"start running, time : {get_current_time_info(2)}")
+    print(f"start running, time : {get_current_time_info(2)}; (approximated time : 26 min / nsd subject)")
     os.makedirs(save_path, exist_ok=True)
     
     json_path = f"json_12-24/subj-0{nsd_subj}/"
@@ -133,10 +133,10 @@ if __name__ == "__main__":
 
     ## before running : 
     ## 1. put eeg signal folder, "Preprocessed_data_250Hz_whiten", under "things-eeg-data" folder
-    ## 2. put things images folder "training_images" and "image_metadata.npy" under "things-eeg-data" folder
+    ## 2. put things images folder "training_images", and "image_metadata.npy", under "things-eeg-data" folder
     ## 3. put all nsd data directly under "nsd-data" folder
-    ## 4. put fMRI embeddings folder, "fMRI_embeddings", under root directory
+    ## 4. put fMRI embeddings folder, "fMRI_embeddings", under root directory (i.e. "12.24" folder)
     
     load(nsd_subj=2, threshold=0.45)
-    # ps. threshold can be chosen from : 0.4, 0.42, 0.45, 0.47, 0.5
+    ## ps. threshold can be chosen from : 0.4, 0.42, 0.45, 0.47, 0.5
     
