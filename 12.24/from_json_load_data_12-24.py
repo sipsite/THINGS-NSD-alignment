@@ -9,6 +9,7 @@ import datetime
 import time
 from PIL import Image
 import h5py
+import about_index
 
 def get_current_time_info(format = 3): # 1:m+d; 2. h+m; 3.m+d+h+m; 4:m+d+h+m+s
     now = datetime.datetime.now()
@@ -24,7 +25,6 @@ def get_current_time_info(format = 3): # 1:m+d; 2. h+m; 3.m+d+h+m; 4:m+d+h+m+s
 
 nsd_data_path = "nsd-data/"
 things_data_path = "things-eeg-data/"
-good_index = None
 
 def from_json_load_eeg_data(match_index, things_subj_id=1):
     data_path=things_data_path
@@ -49,10 +49,12 @@ def from_json_load_eeg_data(match_index, things_subj_id=1):
     return things_data, things_imgs
 
 def from_json_load_nsd_data(match_index, subj_index):
+    good_index = about_index.process_nsd_index(subj_index)
+    img2fmri_index = about_index.img2fmri_index(subj_index, is_train=True)
+
     data_path = nsd_data_path
     nsd_subj1_sig_path = os.path.join(data_path, f"betas_all_subj0{subj_index}_fp32_renorm.hdf5")
     nsd_embed_path = os.path.join(f"fMRI_embeddings/subj-0{subj_index}/train/embeddings_subj0{subj_index}_train.npy")
-    global good_index
     f11 = h5py.File(nsd_subj1_sig_path, "r")
     nsd_data_all = f11["betas"]
     nsd_imgs = []
@@ -69,7 +71,7 @@ def from_json_load_nsd_data(match_index, subj_index):
         embed3 = []
         for _ in range(3):  # each nsd_id has 3 repetitions
             c3.append(nsd_data_all[good_index[nsd_id][_], :])
-            embed3.append(nsd_embed_all[good_index[nsd_id][_], :])
+            embed3.append(nsd_embed_all[img2fmri_index[nsd_id][_], :])
         nsd_embed.append(np.array(embed3))
         nsd_data.append(c3)
         nsd_imgs.append(nsd_img_all[nsd_id, :, :, :])
@@ -77,21 +79,6 @@ def from_json_load_nsd_data(match_index, subj_index):
     f11.close()
     f22.close()
     return nsd_data, nsd_imgs, nsd_embed
-
-def process_nsd_index(subj_id):
-    global good_index
-    nsd_index_path = os.path.join(nsd_data_path, "COCO_73k_subj_indices.hdf5")
-    good_index = dict()
-    with h5py.File(nsd_index_path, "r") as f:
-        good_index[f"subj{subj_id:02d}"] = {}
-        subj_data = f[f"subj{subj_id:02d}"][:]
-        for img_idx, nsd_idx in enumerate(subj_data):
-            good_index[f"subj{subj_id:02d}"].setdefault(nsd_idx, []).append(img_idx)
-    # save_file_name = os.path.join(save_path, f"nsd_good_index_{get_current_time_info()}.pt")
-    # torch.save(good_index, save_file_name)
-    good_index = good_index[f"subj{subj_id:02d}"]
-    return good_index
-
 
 
 ## para : 
@@ -110,19 +97,25 @@ def load(nsd_subj=1, things_subj=np.arange(1,11).tolist(), threshold=0.45):
     except FileNotFoundError:
         print(f"❌ Error: File {json_path} not found.")
         exit(1)
-
-    process_nsd_index(nsd_subj)
+    
+    
+    good_index = about_index.process_nsd_index(nsd_subj)
+    
 
     save_path = os.path.join(save_path, f"result_{get_current_time_info(4)}/")
     os.makedirs(save_path, exist_ok=True)
     
-    nsd_sig, nsd_img = from_json_load_nsd_data(match_index=json_data, subj_index=nsd_subj)
+    nsd_sig, nsd_img, nsd_embed = from_json_load_nsd_data(match_index=json_data, subj_index=nsd_subj)
     print("nsd_sig.shape : ", np.array(nsd_sig).shape)
     print("nsd_img.shape : ", np.array(nsd_img).shape)
+    print("nsd_embed.shape : ", np.array(nsd_embed).shape)
     file_name_ns = f"nsd_subj0{nsd_subj}_sig.npy"
     file_name_ni = f"nsd_subj0{nsd_subj}_img.npy"
+    file_name_ne = f"nsd_subj0{nsd_subj}_embed.npy"
     np.save(os.path.join(save_path, file_name_ns), nsd_sig)
     np.save(os.path.join(save_path, file_name_ni), nsd_img)
+    np.save(os.path.join(save_path, file_name_ne), nsd_embed)
+    print(f"NSD data saved. Time : {get_current_time_info(2)}")
     for things_subj_id in things_subj:
         things_sig, things_img = from_json_load_eeg_data(match_index=json_data, things_subj_id=things_subj_id)
         if things_subj_id == things_subj[0]:
@@ -132,6 +125,7 @@ def load(nsd_subj=1, things_subj=np.arange(1,11).tolist(), threshold=0.45):
         file_name_ei = f"things_subj{things_subj_id:02d}_img.npy"
         np.save(os.path.join(save_path, file_name_es), things_sig)
         np.save(os.path.join(save_path, file_name_ei), things_img)
+    print(f"THINGS data saved. Time : {get_current_time_info(2)}")
     print(f"done. Time : {get_current_time_info(2)}")
 
 
