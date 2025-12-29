@@ -36,14 +36,17 @@ def from_json_load_eeg_data(match_index, things_subj_id=1):
     things_img_path_base = os.path.join(data_path, "training_images")
     things_img_find = np.load(os.path.join(data_path, "image_metadata.npy"), allow_pickle=True).item()
     things_imgs = []
+    # print(len(all_items)) 
     for item in all_items:
         things_id = item["things_id"]
-
         things_data.append(things_data_all[things_id, :, :])
+        # print("Loading THINGS image id:", things_id) #
+        # print(things_img_find['train_img_concepts'][things_id], things_img_find['train_img_files'][things_id]) ##
         things_img_path = os.path.join(things_img_path_base, things_img_find['train_img_concepts'][things_id], things_img_find['train_img_files'][things_id])
         target_size = (224, 224)
         img = Image.open(things_img_path).convert("RGB").resize(target_size, resample=Image.LANCZOS)
         things_imgs.append(img)
+        
     things_imgs = np.array(things_imgs)
 
     return things_data, things_imgs
@@ -88,8 +91,8 @@ def load(nsd_subj=1, things_subj=np.arange(1,11).tolist(), threshold=0.45):
     print(f"start running, time : {get_current_time_info(2)}; (approximated time : 26 min / nsd subject)")
     os.makedirs(save_path, exist_ok=True)
     
-    json_path = f"json_12-24/subj-0{nsd_subj}/"
-    wanted_json_file = f"retrieval_rearranged_subj0{nsd_subj}_t{threshold}_12-24.json" 
+    json_path = f"json_12-29/subj-0{nsd_subj}/"
+    wanted_json_file = f"retrieval_rearranged_subj0{nsd_subj}_t{threshold}_12-29.json" 
     json_path = os.path.join(json_path, wanted_json_file)
     try : 
         with open(json_path, 'r') as f:
@@ -105,17 +108,17 @@ def load(nsd_subj=1, things_subj=np.arange(1,11).tolist(), threshold=0.45):
     save_path = os.path.join(save_path, f"result_{get_current_time_info(4)}/")
     os.makedirs(save_path, exist_ok=True)
     
-    nsd_sig, nsd_img, nsd_embed = from_json_load_nsd_data(match_index=json_data, subj_index=nsd_subj)
-    print("nsd_sig.shape : ", np.array(nsd_sig).shape)
-    print("nsd_img.shape : ", np.array(nsd_img).shape)
-    print("nsd_embed.shape : ", np.array(nsd_embed).shape)
-    file_name_ns = f"nsd_subj0{nsd_subj}_sig.npy"
-    file_name_ni = f"nsd_subj0{nsd_subj}_img.npy"
-    file_name_ne = f"nsd_subj0{nsd_subj}_embed.npy"
-    np.save(os.path.join(save_path, file_name_ns), nsd_sig)
-    np.save(os.path.join(save_path, file_name_ni), nsd_img)
-    np.save(os.path.join(save_path, file_name_ne), nsd_embed)
-    print(f"NSD data saved. Time : {get_current_time_info(2)}")
+    # nsd_sig, nsd_img, nsd_embed = from_json_load_nsd_data(match_index=json_data, subj_index=nsd_subj)
+    # print("nsd_sig.shape : ", np.array(nsd_sig).shape)
+    # print("nsd_img.shape : ", np.array(nsd_img).shape)
+    # print("nsd_embed.shape : ", np.array(nsd_embed).shape)
+    # file_name_ns = f"nsd_subj0{nsd_subj}_sig.npy"
+    # file_name_ni = f"nsd_subj0{nsd_subj}_img.npy"
+    # file_name_ne = f"nsd_subj0{nsd_subj}_embed.npy"
+    # np.save(os.path.join(save_path, file_name_ns), nsd_sig)
+    # np.save(os.path.join(save_path, file_name_ni), nsd_img)
+    # np.save(os.path.join(save_path, file_name_ne), nsd_embed)
+    # print(f"NSD data saved. Time : {get_current_time_info(2)}")
     for things_subj_id in things_subj:
         things_sig, things_img = from_json_load_eeg_data(match_index=json_data, things_subj_id=things_subj_id)
         if things_subj_id == things_subj[0]:
@@ -137,6 +140,6 @@ if __name__ == "__main__":
     ## 3. put all nsd data directly under "nsd-data" folder
     ## 4. put fMRI embeddings folder, "fMRI_embeddings", under root directory (i.e. "12.24" folder)
     
-    load(nsd_subj=2, threshold=0.45)
+    load(nsd_subj=1, threshold=0.5)
     ## ps. threshold can be chosen from : 0.4, 0.42, 0.45, 0.47, 0.5
     
